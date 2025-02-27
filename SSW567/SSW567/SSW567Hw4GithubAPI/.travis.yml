@@ -1,0 +1,8 @@
+language: python
+python:
+  - "3.8"  # Specify the Python version you're using
+install:
+  - pip install requests pytest  # Install dependencies
+script:
+  - pytest test_github_api.py  # Run the tests
+  
