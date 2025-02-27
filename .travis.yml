@@ -4,4 +4,4 @@ python:
 install:
   - pip install requests pytest
 script:
-  - pytest test_github_api.py
+  - pytest SSW567/SSW567Hw4GithubAPI/github_api_testing.py
