@@ -2,6 +2,7 @@ language: python
 python:
   - "3.8"
 install:
+  - pip install "urllib3<2"  # Pin urllib3 to version 1.x
   - pip install requests pytest
 script:
   - pytest SSW567/SSW567Hw4GithubAPI/github_api_testing.py
