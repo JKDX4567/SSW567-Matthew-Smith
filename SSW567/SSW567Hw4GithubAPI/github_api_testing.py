@@ -7,13 +7,13 @@ class TestGitHubAPI(unittest.TestCase):
     def test_get_user_repos_commits_success(self, mock_get):
         mock_get.return_value.status_code = 200
         mock_get.return_value.json.return_value = [
-            {"name": "repo1"},
-            {"name": "repo2"}
-        ]       
+            {"name": "repo1", "full_name": "testuser/repo1"},
+            {"name": "repo2", "full_name": "testuser/repo2"}
+        ]
         mock_get.side_effect = [
             type("MockResponse", (), {"status_code": 200, "json": lambda: [{"commit": {}}] * 10}),
             type("MockResponse", (), {"status_code": 200, "json": lambda: [{"commit": {}}] * 5})
-        ]
+        ]    
         result = get_user_repos_commits("testuser")
         self.assertEqual(result, [("repo1", 10), ("repo2", 5)])
 
@@ -30,11 +30,11 @@ class TestGitHubAPI(unittest.TestCase):
         with self.assertRaises(Exception) as context:
             get_user_repos_commits("testuser")
         self.assertTrue("Rate limit exceeded" in str(context.exception))
-  
+
     @patch('requests.get')
     def test_get_user_repos_commits_repo_commits_error(self, mock_get):
         mock_get.side_effect = [
-            type("MockResponse", (), {"status_code": 200, "json": lambda: [{"name": "repo1"}]}),
+            type("MockResponse", (), {"status_code": 200, "json": lambda: [{"name": "repo1", "full_name": "testuser/repo1"}]}),
             type("MockResponse", (), {"status_code": 404, "json": lambda: None})
         ]
         with self.assertRaises(Exception) as context:
@@ -45,8 +45,8 @@ class TestGitHubAPI(unittest.TestCase):
     def test_print_repo_commit_count(self, mock_get):
         mock_get.return_value.status_code = 200
         mock_get.return_value.json.return_value = [
-            {"name": "repo1"},
-            {"name": "repo2"}
+            {"name": "repo1", "full_name": "testuser/repo1"},
+            {"name": "repo2", "full_name": "testuser/repo2"}
         ]
         mock_get.side_effect = [
             type("MockResponse", (), {"status_code": 200, "json": lambda: [{"commit": {}}] * 10}),
